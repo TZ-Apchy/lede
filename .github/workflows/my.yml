@@ -8,12 +8,12 @@
 # <https://github.com/KFERMercer/OpenWrt-CI>
 #
 
-name: OpenWrt
+name: 自定义编译
 
 on:
-  push:
-    branches: 
-      - master
+  # push:
+  #   branches: 
+  #     - master
   # schedule:
   #   - cron: 0 20 * * *
   release:
