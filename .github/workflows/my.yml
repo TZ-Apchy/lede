@@ -87,7 +87,14 @@ jobs:
           cat >> .config <<EOF
           CONFIG_EFI_IMAGES=y
           EOF
-
+          
+          # 设置编译固件的大小：
+          cat >> .config <<EOF
+          CONFIG_TARGET_KERNEL_PARTSIZE=16
+          CONFIG_TARGET_ROOTFS_PARTSIZE=160
+          CONFIG_TARGET_ROOTFS_PARTNAME=""
+          EOF 
+      
           # IPv6支持:
           cat >> .config <<EOF
           CONFIG_PACKAGE_dnsmasq_full_dhcpv6=y
@@ -159,15 +166,14 @@ jobs:
           CONFIG_PACKAGE_wget=y
           EOF
 
-          # 取消编译VMware镜像以及镜像填充 (不要删除被缩进的注释符号):
+          # 编译VMware镜像：
           cat >> .config <<EOF
-          # CONFIG_TARGET_IMAGES_PAD=y
           CONFIG_VMDK_IMAGES=y
           EOF
 
 
           #
-          # ===============================================================
+          # =======================编译固件相关设置完毕=============
           # 
 
           sed -i 's/^[ \t]*//g' ./.config
@@ -175,13 +181,13 @@ jobs:
 
       - name: Make download
         run: |
-          make download -j8 || make download -j4 V=s
+          make download -j8 || make download -j1 V=s
           rm -rf $(find ./dl/ -size -1024c)
           df -h
 
       - name: Compile firmware
         run: |
-          make -j$(nproc) || make -j4 V=s
+          make -j$(nproc) || make -j1 V=s
           echo "======================="
           echo "Space usage:"
           echo "======================="
